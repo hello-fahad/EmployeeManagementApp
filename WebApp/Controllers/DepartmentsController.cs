@@ -15,10 +15,14 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
+
+            ViewBag.Message1 = "This is message 1.";
+            ViewBag.Message2 = "This is message 2.";
+
             var department = DepartmentsRepository.GetDepartmentById(id);
             if(department == null)
             {
-                return Content("<h3 style='color: red'>Department not found.</h3>");
+                return View("Error", new List<string>() { "Department not found."});
             }
 
             return View(department);
@@ -30,7 +34,7 @@ namespace WebApp.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return Content(GetErrorHTML(), "text/html");
+                return View("Error", GetErrors());
             }
 
             DepartmentsRepository.UpdateDepartment(department);
@@ -59,7 +63,7 @@ namespace WebApp.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return Content(GetErrorHTML(), "text/html");
+                return View("Error", GetErrors());
             }
 
             DepartmentsRepository.AddDepartment(department);
@@ -75,7 +79,7 @@ namespace WebApp.Controllers
             if(department == null)
             {
                 ModelState.AddModelError("id", "Department not found.");
-                return Content(GetErrorHTML(), "text/html");
+                return View("Error", GetErrors());
             }
 
             DepartmentsRepository.DeleteDepartment(department);
@@ -85,27 +89,19 @@ namespace WebApp.Controllers
         }
 
 
-        private string GetErrorHTML()
+        private List<string> GetErrors()
         {
             List<string> errorMessages = new List<string>();
             foreach (var value in ModelState.Values)
             {
-                foreach(var error in value.Errors)
+                foreach (var error in value.Errors)
                 {
                     errorMessages.Add(error.ErrorMessage);
                 }
             }
 
-            string html = string.Empty;
-            if(errorMessages.Count > 0)
-            {
-                html = $@"
-                     <ul>
-                        {string.Join("", errorMessages.Select(error => $"<li style='color:red;'>{error}</li>"))}
-                     </ul>";
-            }
-
-            return html;
+            return errorMessages;
         }
+
     }
 }

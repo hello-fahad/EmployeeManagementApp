@@ -1,25 +1,27 @@
-﻿
+﻿@{
+	var days = new DateTime(DateTime.Today.Year, 12, 25) - DateTime.Today;
+
+	if (DateTime.Today > new DateTime(DateTime.Today.Year, 12, 25))
+	{
+		days = new DateTime(DateTime.Today.Year + 1, 12, 25) - DateTime.Today;
+	}
+
+	string color = (days).Days % 2 == 0 ? "Red" : "Green";
+}
+
 
 <html>
 <head>
 	<title>Home page</title>
 </head>
 <body>
-	@{
-		var days = new DateTime(DateTime.Today.Year, 12, 25) - DateTime.Today;
 
-		if (DateTime.Today > new DateTime(DateTime.Today.Year, 12, 25))
-		{
-			days = new DateTime(DateTime.Today.Year + 1, 12, 25) - DateTime.Today;
-		}
 
-		string color = (days).Days % 2 == 0 ? "Red" : "Green";
-	}
-
-	@if(days.Days <= 10)
+	@if(days.Days <= 1000)
 	{
 
 		<h1>Chrismas is around the cornor!</h1>
+		@:Happy holidays!
 
 	}
 	else
@@ -28,11 +30,15 @@
 		{
 			case "Green":
 				<h1 style="color:green">Welcome home!</h1> 
-			 	break;
+				break;
 			case "Red":
-				<h1 style="color:red">Welcome home!</h1> 
-			 	break;
+				<h1 style="color:red">Welcome home!</h1>
+				break;
 		}
+
+		@days.Days
+		<text> days befor Chrismas</text>
+
 	}
 	</body> 
 </html>
