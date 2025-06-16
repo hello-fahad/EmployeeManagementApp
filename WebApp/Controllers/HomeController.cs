@@ -6,7 +6,7 @@ namespace WebApp.Controllers
     {
         public IActionResult Index()
         {
-            return Content("Welcome to department management.");
+            return View("Index");
         }
     }
 }
