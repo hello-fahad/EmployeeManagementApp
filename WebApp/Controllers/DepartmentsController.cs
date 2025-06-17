@@ -16,9 +16,6 @@ namespace WebApp.Controllers
         public IActionResult Details(int id)
         {
 
-            ViewBag.Message1 = "This is message 1.";
-            ViewBag.Message2 = "This is message 2.";
-
             var department = DepartmentsRepository.GetDepartmentById(id);
             if(department == null)
             {
@@ -45,16 +42,9 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            var html = @"
-                    <h1>Add Department</h1>
-                    <form method='post' action='/departments/create'>
-                        <label>Name: <input type='text' name='Name' /></label><br />
-                        <label>Description: <input type='text' name='Description' /></label><br />
-                        <br/>
-                        <button type='submit'>Add</button>
-                    </form>";
+            
 
-            return Content(html, "text/html");
+            return View(new Department());
 
         }
 
