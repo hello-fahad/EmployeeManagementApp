@@ -1,4 +1,7 @@
-﻿@{
+﻿
+@{
+	ViewBag.Title = "Home";
+
 	var days = new DateTime(DateTime.Today.Year, 12, 25) - DateTime.Today;
 
 	if (DateTime.Today > new DateTime(DateTime.Today.Year, 12, 25))
@@ -10,35 +13,28 @@
 }
 
 
-<html>
-<head>
-	<title>Home page</title>
-</head>
-<body>
 
 
-	@if(days.Days <= 1000)
+@if (days.Days <= 1000)
+{
+
+	<h1>Chrismas is around the cornor!</h1>
+	@:Happy holidays!
+
+}
+else
+{
+	switch (color)
 	{
-
-		<h1>Chrismas is around the cornor!</h1>
-		@:Happy holidays!
-
+		case "Green":
+			<h1 style="color:green">Welcome home!</h1>
+			break;
+		case "Red":
+			<h1 style="color:red">Welcome home!</h1>
+			break;
 	}
-	else
-	{
-		switch (color)
-		{
-			case "Green":
-				<h1 style="color:green">Welcome home!</h1> 
-				break;
-			case "Red":
-				<h1 style="color:red">Welcome home!</h1>
-				break;
-		}
 
-		@days.Days
-		<text> days befor Chrismas</text>
+	@days.Days
+	<text> days befor Chrismas</text>
 
-	}
-	</body> 
-</html>
+}

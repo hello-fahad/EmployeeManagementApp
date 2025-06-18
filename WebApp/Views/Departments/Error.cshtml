@@ -2,20 +2,18 @@
 
 @model List<string>
 
-<html>
-<head>
-	<title>Error</title>
-</head>
-<body>
-	<h1 style="color:red">Errors: </h1>
-	<ul>
-		@if(Model is not null && Model.Count > 0)
+@{
+	ViewBag.Title = "Departments";
+}
+
+
+<h1 style="color:red">Errors: </h1>
+<ul>
+	@if (Model is not null && Model.Count > 0)
+	{
+		foreach (var errorMessage in Model)
 		{
-			foreach(var errorMessage in Model)
-			{
-				<li>@errorMessage</li>
-			}
+			<li>@errorMessage</li>
 		}
-		</ul>
-	</body>
-</html>
+	}
+</ul>
