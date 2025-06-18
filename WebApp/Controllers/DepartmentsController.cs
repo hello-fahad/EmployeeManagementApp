@@ -12,11 +12,18 @@ namespace WebApp.Controllers
             return View();
         }
 
+        //[Route("/Department-list/{filter?}")]
+        //public IActionResult SearchDepartments(string? filter)
+        //{
+        //    var departments = DepartmentRepository.GetDepartments(filter);
+        //    return PartialView("_DepartmentList", departments);
+        //}
+
+
         [Route("/Department-list/{filter?}")]
         public IActionResult SearchDepartments(string? filter)
         {
-            var departments = DepartmentRepository.GetDepartments(filter);
-            return PartialView("_DepartmentList", departments);
+            return ViewComponent("DepartmentList", new { filter });
         }
 
 

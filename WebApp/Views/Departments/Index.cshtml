@@ -21,7 +21,6 @@
 		</tr>
 	</thread>
 	<tbody id="department-list">
-
 	</tbody>
 </table>
 
@@ -33,17 +32,15 @@
 <script>
 
 	document.querySelector("#search-button").addEventListener("click", async () => {
-		var filter = document.querySelector("#search-filter").value;
+	  var filter = document.querySelector("#search-filter").value;
 
+	  var response = await fetch(`/department-list/${filter}`);
 
-		 var response = await fetch(`/department-list/${filter}`);
+	  var departmentsHtml = await response.text();
 
-		 var departmentsHTML = await response.text();
-
-		 document.querySelector("#department-list").innerHTML = departmentsHTML;
-		
+	  document.querySelector("#department-list").innerHTML = departmentsHtml;
 	});
-
 </script>
+
 	
 
