@@ -3,6 +3,7 @@
 
 @{
 	ViewBag.Title = "Create new departments";
+	ViewBag.Action = "create";
 }
 
 @section title_section{
@@ -10,40 +11,7 @@
 }
 
 
-<form method="post" action="/departments/create">
-
-	<div class="row mb-3">
-		<div class="col-2">
-			<label class="col-form-label">Name</label>
-		</div>
-		<div class="col-6">
-			<input type="text" name="Name" value="@Model.Name" class="form-control" />
-		</div>
-	</div>
-
-	<div class="row mb-3">
-		<div class="col-2">
-			<label class="col-form-label">Description</label>
-		</div>
-		<div class="col-6">
-			<input type="text" name="Description" value="@Model.Description" class="form-control" />
-		</div>
-	</div>
-
-
-	<div class="row mb-3">
-		<div class="col-2">
-			<button type="submit" class="btn btn-primary">Save</button>
-			&nbsp;&nbsp;
-			<a href="/departments" class="btn btn-primary">Cancel</a>
-		</div>
-		<div class="col-1">
-			<div class="col-1">
-				
-			</div>
-		</div>
-	</div>
-</form>
+@await Html.PartialAsync("_DepartmentDetail", @Model)
 		
 	
 

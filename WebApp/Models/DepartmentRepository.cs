@@ -1,28 +1,35 @@
 ﻿namespace WebApp.Models
 {
-    public static class DepartmentsRepository
+    public static class DepartmentRepository
     {
-        private static List<Department> Departments = new List<Department>
+        private static List<Department> _departments = new List<Department>
         {
             new Department(1, "Sales", "Sales Department"),
             new Department(2, "Engineering", "Engineering Department"),
             new Department(3, "QA", "Quality Assurance")
         };
 
-        public static List<Department> GetDepartments() => Departments;
+        public static List<Department> GetDepartments(string? filter = null)
+        {
+            if(string.IsNullOrWhiteSpace(filter))
+            {
+                return _departments;
+            }
+
+            return _departments.Where(x => x.Name is not null && x.Name.ToLower().Contains(filter.ToLower())).ToList();        }
 
         public static Department? GetDepartmentById(int id)
         {
-            return Departments.FirstOrDefault(x => x.Id == id);
+            return _departments.FirstOrDefault(x => x.Id == id);
         }
 
         public static void AddDepartment(Department? Department)
         {
             if (Department is not null)
             {
-                int maxId = Departments.Max(x => x.Id);
+                int maxId = _departments.Max(x => x.Id);
                 Department.Id = maxId + 1;
-                Departments.Add(Department);
+                _departments.Add(Department);
             }
         }
 
@@ -30,7 +37,7 @@
         {
             if (Department is not null)
             {
-                var emp = Departments.FirstOrDefault(x => x.Id == Department.Id);
+                var emp = _departments.FirstOrDefault(x => x.Id == Department.Id);
                 if (emp is not null)
                 {
                     emp.Name = Department.Name;
@@ -47,7 +54,7 @@
         {
             if (Department is not null)
             {
-                Departments.Remove(Department);
+                _departments.Remove(Department);
                 return true;
             }
 

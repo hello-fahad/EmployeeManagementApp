@@ -8,15 +8,23 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var departments = DepartmentsRepository.GetDepartments();
-            return View(departments);
+
+            return View();
         }
+
+        [Route("/Department-list/{filter?}")]
+        public IActionResult SearchDepartments(string? filter)
+        {
+            var departments = DepartmentRepository.GetDepartments(filter);
+            return PartialView("_DepartmentList", departments);
+        }
+
 
         [HttpGet]
         public IActionResult Details(int id)
         {
 
-            var department = DepartmentsRepository.GetDepartmentById(id);
+            var department = DepartmentRepository.GetDepartmentById(id);
             if(department == null)
             {
                 return View("Error", new List<string>() { "Department not found."});
@@ -34,7 +42,7 @@ namespace WebApp.Controllers
                 return View("Error", GetErrors());
             }
 
-            DepartmentsRepository.UpdateDepartment(department);
+            DepartmentRepository.UpdateDepartment(department);
 
             return RedirectToAction(nameof(Index));
         }
@@ -56,7 +64,7 @@ namespace WebApp.Controllers
                 return View("Error", GetErrors());
             }
 
-            DepartmentsRepository.AddDepartment(department);
+            DepartmentRepository.AddDepartment(department);
 
             return RedirectToAction(nameof(Index));
 
@@ -65,14 +73,14 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            var department = DepartmentsRepository.GetDepartmentById(id);
+            var department = DepartmentRepository.GetDepartmentById(id);
             if(department == null)
             {
                 ModelState.AddModelError("id", "Department not found.");
                 return View("Error", GetErrors());
             }
 
-            DepartmentsRepository.DeleteDepartment(department);
+            DepartmentRepository.DeleteDepartment(department);
 
             return RedirectToAction(nameof(Index));
 

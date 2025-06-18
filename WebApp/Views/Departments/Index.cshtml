@@ -1,7 +1,5 @@
 ﻿
 
-@model List<Department>
-
 @{
 	ViewBag.Title = "Departments";
 }
@@ -11,31 +9,41 @@
 	<h3>Departments</h3>
 }
 
+@await Html.PartialAsync("_SearchBar")
 
-@if (Model is not null && Model.Count > 0)
-{
-	<table class="table table-striped">
-		<thread>
-			<tr>
-				<th>Name</th>
-				<th>Description</th>
-				<th></th>
-			</tr>
-		</thread>
-		<tbody>
-			@foreach (var department in Model)
-			{
-				<tr>
-					<td>@department.Name</td>
-					<td>@department.Description</td>
-					<td><a class="btn btn-link" href="/departments/details/@department.Id">Edit</a></td>
-				</tr>
-			}
-		</tbody>
-	</table>
-}
+
+<table class="table table-striped">
+	<thread>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th></th>
+		</tr>
+	</thread>
+	<tbody id="department-list">
+
+	</tbody>
+</table>
+
 
 <br />
 <a class="btn btn-primary" href="/departments/create">Add</a>
+
+
+<script>
+
+	document.querySelector("#search-button").addEventListener("click", async () => {
+		var filter = document.querySelector("#search-filter").value;
+
+
+		 var response = await fetch(`/department-list/${filter}`);
+
+		 var departmentsHTML = await response.text();
+
+		 document.querySelector("#department-list").innerHTML = departmentsHTML;
+		
+	});
+
+</script>
 	
 
