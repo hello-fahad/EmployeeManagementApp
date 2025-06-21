@@ -31,15 +31,24 @@
 
 <script>
 
+	loadDepartments('');
+
 	document.querySelector("#search-button").addEventListener("click", async () => {
 	  var filter = document.querySelector("#search-filter").value;
 
-	  var response = await fetch(`/department-list/${filter}`);
+	  loadDepartments(filter);
+
+	});
+
+	async function loadDepartments(filter)
+	{
+		var response = await fetch(`/department-list/${filter}`);
 
 	  var departmentsHtml = await response.text();
 
 	  document.querySelector("#department-list").innerHTML = departmentsHtml;
-	});
+	}
+
 </script>
 
 	
