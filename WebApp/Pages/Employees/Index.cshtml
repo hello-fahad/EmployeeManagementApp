@@ -1,7 +1,57 @@
 ﻿@page
 @model WebApp.Pages.Employees.IndexModel
-@{
+
+@section title_section
+{
+<h3>Employees</h3>
 }
 
+@await Html.PartialAsync("_SearchBar")
 
-<h3>Employees</h3>
+
+<table class="table table-striped">
+	<thread>
+		<tr>
+			<th>Name</th>
+			<th>Position</th>
+			<th>Salary</th>
+			<th>Department</th>
+			<th></th>
+		</tr>
+	</thread>
+	<tbody id="employee-list">
+		@await Component.InvokeAsync("EmployeeList")
+	</tbody>
+</table>
+
+
+<br/>
+<a class="btn btn-primary" href="/employees/create"> Add </a>
+<br/>
+
+
+@*< script>
+
+	loadDepartments('');
+
+	document.querySelector("#search-button").addEventListener("click", async () => {
+	  var filter = document.querySelector("#search-filter").value;
+
+	  loadDepartments(filter);
+
+	});
+
+	async function loadDepartments(filter)
+	{
+		var response = await fetch(`/department-list/${filter}`);
+
+	  var departmentsHtml = await response.text();
+
+	  document.querySelector("#department-list").innerHTML = departmentsHtml;
+	}
+
+</script> *@
+
+
+
+
