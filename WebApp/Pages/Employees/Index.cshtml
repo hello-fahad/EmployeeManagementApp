@@ -20,7 +20,7 @@
 		</tr>
 	</thread>
 	<tbody id="employee-list">
-		@await Component.InvokeAsync("EmployeeList")
+		@* @await Component.InvokeAsync("EmployeeList") *@
 	</tbody>
 </table>
 
@@ -29,29 +29,26 @@
 <a class="btn btn-primary" href="/employees/create"> Add </a>
 <br/>
 
+@section scripts
+{
+	<script>
 
-@*< script>
+		loadEmployees('');
 
-	loadDepartments('');
+		document.querySelector("#search-button").addEventListener("click", async () => {
+		  var filter = document.querySelector("#search-filter").value;
 
-	document.querySelector("#search-button").addEventListener("click", async () => {
-	  var filter = document.querySelector("#search-filter").value;
+		  loadEmployees(filter);
+		});
 
-	  loadDepartments(filter);
+		async function loadEmployees(filter)
+		{
+			var response = await fetch(`/employees?filter=${filter}&handler=SearchEmployeeResult`);
 
-	});
+			var html = await response.text();
 
-	async function loadDepartments(filter)
-	{
-		var response = await fetch(`/department-list/${filter}`);
+			document.querySelector("#employee-list").innerHTML = html;
+		}
 
-	  var departmentsHtml = await response.text();
-
-	  document.querySelector("#department-list").innerHTML = departmentsHtml;
-	}
-
-</script> *@
-
-
-
-
+	</script>
+}

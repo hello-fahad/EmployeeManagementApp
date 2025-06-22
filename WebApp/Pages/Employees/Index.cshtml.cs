@@ -9,7 +9,13 @@ namespace WebApp.Pages.Employees
         public List<Employee>? Employees { get; set; }
         public void OnGet()
         {
-            this.Employees = EmployeeRepository.GetEmployees();
+            //this.Employees = EmployeeRepository.GetEmployees();
+        }
+
+        public IActionResult OnGetSearchEmployeeResult(string? filter)
+        {
+            //@await Component.InvokeAsync("EmployeeList")
+            return ViewComponent("EmployeeList", new { filter });
         }
     }
 }
