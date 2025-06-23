@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApp.Helpers;
 using WebApp.Models;
 
 namespace WebApp.Controllers
@@ -46,7 +47,7 @@ namespace WebApp.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return View("Error", GetErrors());
+                return View("Error", ModelStateHelper.GetErrors(ModelState));
             }
 
             DepartmentRepository.UpdateDepartment(department);
@@ -68,7 +69,7 @@ namespace WebApp.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return View("Error", GetErrors());
+                return View("Error", ModelStateHelper.GetErrors(ModelState));
             }
 
             DepartmentRepository.AddDepartment(department);
@@ -84,28 +85,13 @@ namespace WebApp.Controllers
             if(department == null)
             {
                 ModelState.AddModelError("id", "Department not found.");
-                return View("Error", GetErrors());
+                return View("Error", ModelStateHelper.GetErrors(ModelState));
             }
 
             DepartmentRepository.DeleteDepartment(department);
 
             return RedirectToAction(nameof(Index));
 
-        }
-
-
-        private List<string> GetErrors()
-        {
-            List<string> errorMessages = new List<string>();
-            foreach (var value in ModelState.Values)
-            {
-                foreach (var error in value.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
-            }
-
-            return errorMessages;
         }
 
     }
