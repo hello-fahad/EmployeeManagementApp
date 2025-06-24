@@ -2,7 +2,9 @@
 
 
 
-<form method="post" action="/departments/@ViewBag.Action">
+<form method="post"
+	  asp-controller="Departments"
+	  asp-action="@ViewBag.Action">
 
 	@if(ViewBag.Action == "edit")
 	{
@@ -32,12 +34,14 @@
 		<div class="col-2">
 			<button type="submit" class="btn btn-primary">Save</button>
 			&nbsp;&nbsp;
-			<a href="/departments" class="btn btn-primary">Cancel</a>
+			<a asp-controller="Departments" asp-action="Index" class="btn btn-primary">Cancel</a>
 		</div>
 		<div class="col-4">
 			@if (ViewBag.Action == "edit")
 			{
-				<a href="/employees/departmentemployees/@Model.Id" class="btn btn-link">Check Employees</a>
+				<a asp-page="/employees/departmentemployees" 
+				asp-route-departmentId="@Model.Id" 
+				class="btn btn-link">Check Employees</a>
 			}
 		</div>
 	</div>

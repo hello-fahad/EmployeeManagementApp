@@ -15,7 +15,10 @@
 
 
 
-<form method="post" action="/departments/delete/@Model.Id">
+<form method="post" 
+	asp-controller="Departments"
+	asp-action="Delete"
+	asp-route-id="@Model.Id">
 	<button type="submit" class="btn btn-danger">Delete</button>
 </form>
 	

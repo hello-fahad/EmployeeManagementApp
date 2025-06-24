@@ -12,8 +12,12 @@
 
 @await Html.PartialAsync("_EmployeeDetail", Model.EmployeeViewModel)
 
-<form name="deleteEmployeeForm" method="post" action="/employees/edit/@Model.EmployeeViewModel.Employee.Id?handler=DeleteEmployee">
-	@Html.AntiForgeryToken()
+<form name="deleteEmployeeForm"
+	method="post" 
+	asp-page="/employees/edit"
+	asp-route-id="@Model.EmployeeViewModel.Employee.Id"
+	asp-page-handler="DeleteEmployee">
+
 	<button type="submit" id="delete-employee" class="btn btn-danger">Delete</button>
 
 </form>

@@ -3,7 +3,6 @@
 @if (Model is not null && Model.Employee is not null)
 {
 	<form method="post">
-		@Html.AntiForgeryToken()
 
 		@if (ViewBag.Action == "edit")
 		{
@@ -86,7 +85,7 @@
 			<div class="col-2">
 				<button type="submit" class="btn btn-primary">Save</button>
 				&nbsp;&nbsp;
-				<a href="/employees" class="btn btn-primary">Cancel</a>
+				<a asp-page="/employees/index" class="btn btn-primary">Cancel</a>
 			</div>
 			<div class="col-4">
 			</div>

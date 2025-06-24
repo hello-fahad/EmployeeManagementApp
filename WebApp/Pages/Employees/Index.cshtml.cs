@@ -12,6 +12,11 @@ namespace WebApp.Pages.Employees
             //this.Employees = EmployeeRepository.GetEmployees();
         }
 
+        public void OnGetTest()
+        {
+
+        }
+
         public IActionResult OnGetSearchEmployeeResult(string? filter)
         {
             //@await Component.InvokeAsync("EmployeeList")
