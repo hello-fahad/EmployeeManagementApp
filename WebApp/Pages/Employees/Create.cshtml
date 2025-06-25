@@ -11,4 +11,6 @@
 	<h3>Add Employee</h3>
 }
 
-@await Html.PartialAsync("_EmployeeDetail", Model.EmployeeViewModel)
+@* @await Html.PartialAsync("_EmployeeDetail", Model.EmployeeViewModel) *@
+
+<partial name="_EmployeeDetail" , model="Model.EmployeeViewModel" />

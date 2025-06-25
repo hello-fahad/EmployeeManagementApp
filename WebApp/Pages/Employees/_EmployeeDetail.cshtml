@@ -3,49 +3,59 @@
 @if (Model is not null && Model.Employee is not null)
 {
 	<form method="post">
+		<div asp-validation-summary="All" class="text-danger">
+		</div>
 
 		@if (ViewBag.Action == "edit")
 		{
-			<input type="hidden" name="Employee.Id" value="@Model.Employee.Id" />
+			<input asp-for="Employee.Id" />
 		}
 
 		<div class="row mb-3">
 			<div class="col-2">
-				<label class="col-form-label">Name</label>
+				<label class="col-form-label" asp-for="Employee.Name"></label>
 			</div>
 			<div class="col-6">
-				<input type="text" name="Employee.Name" value="@Model.Employee.Name" class="form-control" />
+				
+				<input class="form-control" asp-for="Employee.Name" />
+				<span class="text-danger" asp-validation-for="Employee.Name"></span>
 			</div>
 		</div>
 
 		<div class="row mb-3">
 			<div class="col-2">
-				<label class="col-form-label">Position</label>
+				<label class="col-form-label" asp-for="Employee.Position"></label>
 			</div>
 			<div class="col-6">
-				<input type="text" name="Employee.Position" value="@Model.Employee.Position" class="form-control" />
+				<input class="form-control" asp-for="Employee.Position" />
+				<span class="text-danger" asp-validation-for="Employee.Position"></span>
 			</div>
 		</div>
 
 		<div class="row mb-3">
 			<div class="col-2">
-				<label class="col-form-label">Salary</label>
+				<label class="col-form-label" asp-for="Employee.Salary"></label>
 			</div>
 			<div class="col-6">
-				<input type="number" name="Employee.Salary" value="@Model.Employee.Salary" class="form-control" />
+				<input asp-for="Employee.Salary" class="form-control" />
+				<span class="text-danger" asp-validation-for="Employee.Salary"></span>
 			</div>
 		</div>
 
 		<div class="row mb-3">
 			<div class="col-2">
-				<label class="col-form-label">Department</label>
+				<label class="col-form-label" asp-for="Employee.DepartmentId"></label>
 			</div>
 			<div class="col-6">
-				<select name="Employee.DepartmentId" class="form-control">
+				<select class="form-control"
+					asp-for="Employee.DepartmentId" 
+						asp-items='Model.Departments.Select(x => new SelectListItem() {
+							    Text = x.Name, 
+							    Value = x.Id.ToString(), 
+								Selected=(ViewBag.Action == "edit" && x.Id == Model.Employee.DepartmentId)})'>
 
-					@if (Model.Departments is not null)
-					{
 
+					
 						@if (ViewBag.Action == "create")
 						{
 							<option selected value="0"> -- Please Select -- </option>
@@ -55,30 +65,9 @@
 							<option value="0"> -- Please Select -- </option>
 						}
 
-
-
-						foreach (var department in Model.Departments)
-						{
-							if (ViewBag.Action == "edit")
-							{
-								if (department.Id == Model.Employee.DepartmentId)
-								{
-									<option selected value="@department.Id">@department.Name</option>
-								}
-								else
-								{
-									<option value="@department.Id">@department.Name</option>
-								}
-							}
-							else
-							{
-								<option value="@department.Id">@department.Name</option>
-							}
-
-						}
-					}
-
-				</select>
+						</select>
+				<span class="text-danger" asp-validation-for="Employee.DepartmentId"></span>
+					
 			</div>
 		</div>
 		<div class="row mb-3">

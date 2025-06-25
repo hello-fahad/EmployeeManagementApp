@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.Models
 {
@@ -16,6 +17,7 @@ namespace WebApp.Models
             this.Description = description;
         }
 
+        [HiddenInput]
         public int Id { get; set; }
 
         [Required]
@@ -23,5 +25,9 @@ namespace WebApp.Models
 
         [StringLength(500)]
         public string? Description { get; set; }
+
+        [EmailAddress]
+        //[Display(Name = "Email Address")]
+        public string? Email { get; set; }
     }
 }

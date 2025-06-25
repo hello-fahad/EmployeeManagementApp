@@ -6,28 +6,46 @@
 	  asp-controller="Departments"
 	  asp-action="@ViewBag.Action">
 
+	  <div asp-validation-summary="All" class="text-danger">
+	  </div>
+
 	@if(ViewBag.Action == "edit")
 	{
-		<input type="hidden" name="Id" value="@Model.Id" />
+		<input asp-for="Id" />
 	}
 
 	<div class="row mb-3">
 		<div class="col-2">
-			<label class="col-form-label">Name</label>
+			<label class="col-form-label" asp-for="Name"></label>
 		</div>
 		<div class="col-6">
-			<input type="text" name="Name" value="@Model.Name" class="form-control" />
+			<input asp-for="Name" class="form-control" />
+			<span class="text-danger" asp-validation-for="Name"></span>
 		</div>
 	</div>
 
 	<div class="row mb-3">
 		<div class="col-2">
-			<label class="col-form-label">Description</label>
+			<label class="col-form-label" asp-for="Description"></label>
 		</div>
 		<div class="col-6">
-			<input type="text" name="Description" value="@Model.Description" class="form-control" />
+			<input asp-for="Description" class="form-control" />
+			<span class="text-danger" asp-validation-for="Description"></span>
 		</div>
 	</div>
+
+	<div class="row mb-3">
+		<div class="col-2">
+			<label class="col-form-label" asp-for="Email"></label>
+		</div>
+		<div class="col-6">
+			<input asp-for="Email" class="form-control" />
+			<span class="text-danger" asp-validation-for="Email"></span>
+		</div>
+	</div>
+
+
+
 
 
 	<div class="row mb-3">
@@ -45,7 +63,7 @@
 			}
 		</div>
 	</div>
+
+	
+
 </form>
-
-
-
