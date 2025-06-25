@@ -6,10 +6,22 @@ using WebApp.ViewModels;
 
 namespace WebApp.Pages.Employees
 {
+
     public class EditModel : PageModel
     {
+        public IDepartmentRepository DepartmentRepository { get; }
+        public IEmployeeRepository EmployeeRepository { get; }
+
+        public EditModel(IDepartmentRepository departmentRepository, IEmployeeRepository employeeRepository)
+        {
+            DepartmentRepository = departmentRepository;
+            EmployeeRepository = employeeRepository;
+        }
+
         [BindProperty]
         public EmployeeViewModel? EmployeeViewModel { get; set; }
+       
+
         public void OnGet(int id)
         {
             this.EmployeeViewModel = new EmployeeViewModel();

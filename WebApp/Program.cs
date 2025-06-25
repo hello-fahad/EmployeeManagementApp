@@ -1,9 +1,21 @@
+using WebApp.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+
+
+builder.Services.AddSingleton<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
+
+
+
 var app = builder.Build();
+
+
+
 
 
 app.UseStaticFiles(new StaticFileOptions

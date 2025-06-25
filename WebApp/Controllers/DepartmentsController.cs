@@ -6,6 +6,13 @@ namespace WebApp.Controllers
 {
     public class DepartmentsController : Controller
     {
+        public IDepartmentRepository DepartmentRepository { get; }
+
+        public DepartmentsController(IDepartmentRepository departmentRepository)
+        {
+            DepartmentRepository = departmentRepository;
+        }
+
         [HttpGet]
         public IActionResult Index()
         {

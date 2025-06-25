@@ -1,8 +1,14 @@
 ﻿namespace WebApp.Models
 {
-    public class EmployeeRepository
+    public class EmployeeRepository : IEmployeeRepository
     {
-        private static List<Employee> _employees = new List<Employee>
+        public IDepartmentRepository DepartmentRepository { get; }
+        public EmployeeRepository(IDepartmentRepository departmentRepository)
+        {
+            DepartmentRepository = departmentRepository;
+        }
+
+        private List<Employee> _employees = new List<Employee>
         {
             new Employee(1, "John Doe", "Engineer", 60000, 1),
             new Employee(2, "Jane Smith", "Manager", 75000, 1),
@@ -18,19 +24,20 @@
             new Employee(12, "Isabelle Nguyen", "Technician", 57000, 3)
         };
 
+        
 
-        public static List<Employee> GetEmployees(string? filter = null, int? departmentId = null)
+        public List<Employee> GetEmployees(string? filter = null, int? departmentId = null)
         {
             foreach (Employee emp in _employees)
             {
                 emp.Department = DepartmentRepository.GetDepartmentById(emp.DepartmentId);
             }
 
-            if(departmentId.HasValue)
+            if (departmentId.HasValue)
             {
                 return _employees.Where(x => x.DepartmentId == departmentId.Value).ToList();
             }
-            else if(!string.IsNullOrWhiteSpace(filter))
+            else if (!string.IsNullOrWhiteSpace(filter))
             {
                 return _employees.Where(x => x.Name is not null && x.Name.ToLower().Contains(filter.ToLower())).ToList();
             }
@@ -39,14 +46,14 @@
         }
 
 
-        public static Employee? GetEmployeeById(int id)
+        public Employee? GetEmployeeById(int id)
         {
             return _employees.FirstOrDefault(x => x.Id == id);
         }
 
-        public static void AddEmployee(Employee? employee)
+        public void AddEmployee(Employee? employee)
         {
-            if(employee is not null)
+            if (employee is not null)
             {
                 int maxId = _employees.Max(x => x.Id);
                 employee.Id = maxId + 1;
@@ -54,12 +61,12 @@
             }
         }
 
-        public static bool UpdateEmployee(Employee? employee)
+        public bool UpdateEmployee(Employee? employee)
         {
-            if(employee is not null)
+            if (employee is not null)
             {
                 var emp = _employees.FirstOrDefault(x => x.Id == employee.Id);
-                if(emp is not null)
+                if (emp is not null)
                 {
                     emp.Name = employee.Name;
                     emp.Position = employee.Position;
@@ -73,9 +80,9 @@
         }
 
 
-        public static bool DeleteEmployee(Employee? employee)
+        public bool DeleteEmployee(Employee? employee)
         {
-            if(employee is not null)
+            if (employee is not null)
             {
                 _employees.Remove(employee);
                 return true;
