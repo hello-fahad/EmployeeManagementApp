@@ -9,6 +9,11 @@
             new Department(3, "QA", "Quality Assurance")
         };
 
+        public bool DepartmentExists(int departmentId)
+        {
+            return _departments.Any(x => x.Id == departmentId);
+        }
+
         public List<Department> GetDepartments(string? filter = null)
         {
             if (string.IsNullOrWhiteSpace(filter))

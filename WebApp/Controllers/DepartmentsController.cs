@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApp.Filters;
 using WebApp.Helpers;
 using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+    [WriteToConsoleResourceFilter(Description = "Departments Controller")]
     public class DepartmentsController : Controller
     {
         public IDepartmentRepository DepartmentRepository { get; }
@@ -14,18 +16,12 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [WriteToConsoleResourceFilter(Description = "Index Method", Order = -1)]
         public IActionResult Index()
         {
 
             return View();
         }
-
-        //[Route("/Department-list/{filter?}")]
-        //public IActionResult SearchDepartments(string? filter)
-        //{
-        //    var departments = DepartmentRepository.GetDepartments(filter);
-        //    return PartialView("_DepartmentList", departments);
-        //}
 
 
         [Route("/Department-list/{filter?}")]
@@ -36,33 +32,29 @@ namespace WebApp.Controllers
 
 
         [HttpGet]
+        [EndpointExpiresFilter(ExpiryDate = "2025-12-20")]
+        [EnsureDepartmentExistFilter]
         public IActionResult Details(int id)
         {
 
             var department = DepartmentRepository.GetDepartmentById(id);
-            if(department == null)
-            {
-                return View("Error", new List<string>() { "Department not found."});
-            }
-
+            
             return View(department);
 
         }
 
         [HttpPost]
+        [EnsureValidModelStateFilter]
         public IActionResult Edit(Department department)
         {
-            if(!ModelState.IsValid)
-            {
-                return View("Error", ModelStateHelper.GetErrors(ModelState));
-            }
-
+            
             DepartmentRepository.UpdateDepartment(department);
 
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
+        
         public IActionResult Create()
         {
             
@@ -72,13 +64,10 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        [EnsureValidModelStateFilter]
         public IActionResult Create(Department department)
         {
-            if(!ModelState.IsValid)
-            {
-                return View("Error", ModelStateHelper.GetErrors(ModelState));
-            }
-
+            
             DepartmentRepository.AddDepartment(department);
 
             return RedirectToAction(nameof(Index));
@@ -86,19 +75,25 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        [EnsureDepartmentExistFilter]
         public IActionResult Delete(int id)
         {
             var department = DepartmentRepository.GetDepartmentById(id);
-            if(department == null)
-            {
-                ModelState.AddModelError("id", "Department not found.");
-                return View("Error", ModelStateHelper.GetErrors(ModelState));
-            }
 
             DepartmentRepository.DeleteDepartment(department);
 
             return RedirectToAction(nameof(Index));
 
+        }
+
+
+        [HttpGet]
+        //[HandleExceptionFilter]
+        public IActionResult GetDepartments()
+        {
+            throw new ApplicationException("Testing exception handling for web api endpoints.");
+            var departments = DepartmentRepository.GetDepartments();
+            return Json(departments);
         }
 
     }

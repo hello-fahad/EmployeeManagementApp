@@ -1,9 +1,14 @@
+using WebApp.Filters;
 using WebApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
+
+builder.Services.AddRazorPages().AddMvcOptions(options =>
+{
+    options.Filters.Add<WriteToConsoleResourceFilter>();
+});
 
 
 
