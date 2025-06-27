@@ -24,7 +24,10 @@
             new Employee(12, "Isabelle Nguyen", "Technician", 57000, 3)
         };
 
-        
+        public bool EmployeeExists(int employeeId)
+        {
+            return _employees.Any(x => x.Id == employeeId);
+        }
 
         public List<Employee> GetEmployees(string? filter = null, int? departmentId = null)
         {

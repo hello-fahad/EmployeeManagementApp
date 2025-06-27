@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApp.Filters;
 using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.ViewModels;
 
 namespace WebApp.Pages.Employees
 {
+    [EnsureValidModelStatePageFilter]
     public class CreateModel : PageModel
     {
         public IDepartmentRepository DepartmentRepository { get; }
@@ -32,13 +34,7 @@ namespace WebApp.Pages.Employees
 
         public IActionResult OnPost()
         {
-            if(!ModelState.IsValid)
-            {
-                var errors = ModelStateHelper.GetErrors(ModelState);
-
-                return RedirectToPage("/Error", new { errors});
-            }
-
+           
             if(this.EmployeeViewModel is not null && this.EmployeeViewModel.Employee is not null)
             {
                 EmployeeRepository.AddEmployee(this.EmployeeViewModel.Employee);

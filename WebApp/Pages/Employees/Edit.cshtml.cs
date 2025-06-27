@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApp.Filters;
 using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.ViewModels;
 
 namespace WebApp.Pages.Employees
 {
-
+    [EnsureValidModelStatePageFilter]
+    [EnsureEmployeeExistsPageFilter]
     public class EditModel : PageModel
     {
         public IDepartmentRepository DepartmentRepository { get; }
@@ -29,14 +31,10 @@ namespace WebApp.Pages.Employees
             this.EmployeeViewModel.Departments = DepartmentRepository.GetDepartments();
         }
 
+
         public IActionResult OnPost()
         {
-            if(!ModelState.IsValid)
-            {
-                var errors = ModelStateHelper.GetErrors(ModelState);
-                return RedirectToPage("/Error", new { errors });
-            }
-
+            
             if(EmployeeViewModel is not null && EmployeeViewModel.Employee != null)
             {
                 EmployeeRepository.UpdateEmployee(EmployeeViewModel.Employee);
@@ -48,19 +46,10 @@ namespace WebApp.Pages.Employees
         public IActionResult OnPostDeleteEmployee(int id)
         {
             var employee = EmployeeRepository.GetEmployeeById(id);
-            if(employee == null)
-            {
-                ModelState.AddModelError("id", "Employee not found");
-
-                var errors = ModelStateHelper.GetErrors(ModelState);
-                return RedirectToPage("/Error", new { errors });
-            }
 
             EmployeeRepository.DeleteEmployee(employee);
 
             return RedirectToPage("Index");
         }
-
-        
     }
 }
