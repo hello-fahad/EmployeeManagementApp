@@ -53,7 +53,7 @@ namespace WebApp.Model
         public async Task<bool> DeleteDepartmentAsync(Department? department)
         {
 
-            if(department is null)
+            if (department is null)
             {
                 return false;
             }
@@ -94,7 +94,7 @@ namespace WebApp.Model
                     PropertyNameCaseInsensitive = true
                 });
 
-            if(departments is null)
+            if (departments is null)
             {
                 departments = new List<Department>();
             }
@@ -105,7 +105,7 @@ namespace WebApp.Model
 
         public async Task<bool> UpdateDepartmentAsync(Department? department)
         {
-            if(department is null)
+            if (department is null)
             {
                 return false;
             }
@@ -124,3 +124,4 @@ namespace WebApp.Model
 
         }
     }
+}

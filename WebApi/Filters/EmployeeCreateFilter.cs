@@ -18,7 +18,7 @@ namespace WebApi.Filters
                 statusCode: 400);
             }
 
-            return await next(context);
+            return await next(context); 
         }
     }
 }
