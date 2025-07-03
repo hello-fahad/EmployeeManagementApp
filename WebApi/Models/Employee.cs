@@ -25,7 +25,8 @@ namespace WebApi.Models
         public Department? Department { get; set; }
 
         public Employee()
-        {            
+        {
+            
         }
 
         public Employee(int id, string name, string position, double salary, int departmentId)

@@ -17,7 +17,7 @@ builder.Services.AddDbContext<CompanyDbContext>(options =>
 
 builder.Services.AddProblemDetails();
 
-builder.Services.AddTransient<IEmployeesRepository, EmployeesRepository>();
+builder.Services.AddTransient<IEmployeesRepository, EmployeesEFRepository>();
 builder.Services.AddTransient<IDepartmentsRepository, DepartmentsEFRepository>();
 
 builder.Services.AddOpenApi("v1", options =>
