@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WebApi.Models
 {
@@ -20,6 +21,7 @@ namespace WebApi.Models
         [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = "The department is required.")]
         public int DepartmentId { get; set; }
 
+        [JsonIgnore]
         public Department? Department { get; set; }
 
         public Employee()

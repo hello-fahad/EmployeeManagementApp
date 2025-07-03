@@ -11,7 +11,7 @@ namespace WebApi.Endpoints
         public static void MapDepartmentEndpoints(this WebApplication app, ApiVersionSet apiVersionSet)
         {
 
-            app.MapGet("/departments/{filter?}",
+            app.MapGet("/departments/search/{filter?}",
                 //[EndpointName("GetDepartments")]
             [EndpointSummary("Get Departments V1")]
             [EndpointDescription("Get Departemts Description")]
@@ -26,11 +26,12 @@ namespace WebApi.Endpoints
                 return TypedResults.Ok(departments);
             })
                 .WithApiVersionSet(apiVersionSet)
-                .MapToApiVersion(new ApiVersion(1, 0));
+                .MapToApiVersion(new ApiVersion(1, 0))
+                .WithGroupName("v1");
 
 
 
-            app.MapGet("/departments/{filter?}",
+            app.MapGet("/departments/search/{filter?}",
             //[EndpointName("GetDepartments")]
             [EndpointSummary("Get Departments V2")]
             [EndpointDescription("Get Departemts Description")]

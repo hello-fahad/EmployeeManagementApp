@@ -29,6 +29,7 @@ namespace WebApi.Models
 
         [EmailAddress]
         public string? Email { get; set; }
+        [JsonIgnore]
         public List<Employee>? Employees { get; set; }
     }
 }
