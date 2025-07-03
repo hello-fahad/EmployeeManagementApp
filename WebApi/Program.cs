@@ -1,12 +1,19 @@
 using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using WebApi.Data;
 using WebApi.Endpoints;
 using WebApi.Models;
 using WebApi.Results;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<CompanyDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CompanyManagement"));
+});
 
 builder.Services.AddProblemDetails();
 
