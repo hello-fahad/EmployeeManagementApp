@@ -69,6 +69,9 @@ else
 
 app.UseStatusCodePages();
 
+app.MapAccountEndpoints();
+
+
 app.MapEmployeeEndpoints();
 app.MapDepartmentEndpoints(apiVersionSet);
 
