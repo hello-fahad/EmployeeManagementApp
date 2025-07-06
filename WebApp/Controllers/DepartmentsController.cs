@@ -9,6 +9,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     [WriteToConsoleResourceFilter(Description = "Departments Controller")]
     public class DepartmentsController : Controller
     {
@@ -54,6 +55,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [EnsureValidModelStateFilter]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Edit(Department department)
         {
             await departmentsApiRepository.UpdateDepartmentAsync(department);
@@ -69,6 +71,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [EnsureValidModelStateFilter]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Create(Department department)
         {
             await departmentsApiRepository.AddDepartmentAsync(department);
@@ -78,6 +81,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [EnsureDepartmentExistsFilter]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Delete(int id)
         {
             var department = await departmentsApiRepository.GetDepartmentByIdAsync(id);

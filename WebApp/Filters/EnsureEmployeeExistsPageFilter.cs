@@ -1,43 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WebApp.Helpers;
+using WebApp.Model;
 using WebApp.Models;
 using WebApp.Pages.Employees;
 
 namespace WebApp.Filters
 {
-    public class EnsureEmployeeExistsPageFilter : Attribute, IPageFilter
+    public class EnsureEmployeeExistsPageFilter : Attribute, IAsyncPageFilter
     {
-        public void OnPageHandlerExecuted(PageHandlerExecutedContext context)
+        public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
-            
-        }
-
-        public void OnPageHandlerExecuting(PageHandlerExecutingContext context)
-        {
-            if (context.HandlerMethod is not null && context.HandlerMethod.MethodInfo.Name == "OnGet") return;
-
-            var employeeRespository = context.HttpContext.RequestServices.GetService<IEmployeesRepository>();
-
-            object? employeeId;
-            if (context.HandlerArguments.ContainsKey("id"))
-                employeeId = context.HandlerArguments["id"];
-            else            
-                employeeId = ((EditModel)context.HandlerInstance).EmployeeViewModel.Employee.Id;
-            
-
-            if (!employeeRespository.EmployeeExists((int)employeeId))
+            if (context.HandlerMethod is not null && !context.HandlerMethod.MethodInfo.Name.StartsWith("OnGet"))
             {
-                context.ModelState.AddModelError("id", "Employee not found.");
-                var errors = ModelStateHelper.GetErrors(context.ModelState);
+                var employeeRespository = context.HttpContext.RequestServices.GetService<IEmployeesApiRepository>();
 
-                context.Result = new RedirectToPageResult("/Error", new { errors });
-            }            
+                object? employeeId;
+                if (context.HandlerArguments.ContainsKey("id"))
+                    employeeId = context.HandlerArguments["id"];
+                else
+                    employeeId = ((EditModel)context.HandlerInstance).EmployeeViewModel.Employee.Id;
+
+
+                if (!await employeeRespository.EmployeeExistsAsync((int)employeeId))
+                {
+                    context.ModelState.AddModelError("id", "Employee not found.");
+                    var errors = ModelStateHelper.GetErrors(context.ModelState);
+
+                    context.Result = new RedirectToPageResult("/Error", new { errors });
+                }
+            }
+
+            await next();
         }
 
-        public void OnPageHandlerSelected(PageHandlerSelectedContext context)
+        public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
         {
-            
+            await Task.CompletedTask;
         }
     }
 }

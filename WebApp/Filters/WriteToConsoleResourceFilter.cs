@@ -21,6 +21,6 @@ namespace WebApp.Filters
         public void OnResourceExecuted(ResourceExecutedContext context)
         {
             Console.WriteLine($"Executed {Description} - {context.ActionDescriptor.DisplayName}");
-        }        
+        }
     }
 }

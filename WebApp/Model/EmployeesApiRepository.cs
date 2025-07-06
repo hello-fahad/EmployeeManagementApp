@@ -1,68 +1,66 @@
-﻿using System.Net.Http;
+﻿using System.Text.Json;
 using System.Text;
-using System.Text.Json;
-using System.Xml.Linq;
-using WebApp.Model;
+using WebApp.Models;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace WebApp.Models
+namespace WebApp.Model
 {
-    public class DepartmentsApiRepository : IDepartmentsApiRepository
+    public class EmployeesApiRepository : IEmployeesApiRepository
     {
         private readonly IHttpClientFactory httpClientFactory;
 
-        public DepartmentsApiRepository(IHttpClientFactory httpClientFactory)
+        public EmployeesApiRepository(IHttpClientFactory httpClientFactory)
         {
             this.httpClientFactory = httpClientFactory;
         }
 
-        public async Task AddDepartmentAsync(Department? department)
+        public async Task AddEmployeeAsync(Employee? employee)
         {
             var client = httpClientFactory.CreateClient("ApiEndpoints");
 
-            var departmentJson = new StringContent(
-                JsonSerializer.Serialize(department),
+            var employeeJson = new StringContent(
+                JsonSerializer.Serialize(employee),
                 Encoding.UTF8,
                 Application.Json);
 
-            var response = await client.PostAsync("/departments", departmentJson);
+            var response = await client.PostAsync("/employees", employeeJson);
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task<bool> DeleteDepartmentAsync(Department? department)
+        public async Task<bool> DeleteEmployeeAsync(Employee? employee)
         {
-            if (department is null) return false;
+            if (employee is null) return false;
 
             var client = httpClientFactory.CreateClient("ApiEndpoints");
 
 
 
-            var response = await client.DeleteAsync($"/departments/{department.Id}");
+            var response = await client.DeleteAsync($"/employees/{employee.Id}");
             response.EnsureSuccessStatusCode();
 
             return true;
         }
 
-        public async Task<bool> DepartmentExistsAsync(int departmentId)
+        public async Task<bool> EmployeeExistsAsync(int employeeId)
         {
             var client = httpClientFactory.CreateClient("ApiEndpoints");
 
-            var response = await client.GetAsync($"departments/{departmentId}/exists");
+            var response = await client.GetAsync($"employees/{employeeId}/exists");
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
             return bool.Parse(responseString);
         }
 
-        public async Task<Department?> GetDepartmentByIdAsync(int id)
+        public async Task<Employee?> GetEmployeeByIdAsync(int id)
         {
             var client = httpClientFactory.CreateClient("ApiEndpoints");
 
-            var response = await client.GetAsync($"departments/{id}");
+            var response = await client.GetAsync($"employees/{id}");
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<Department>(
+            return JsonSerializer.Deserialize<Employee>(
                 responseString,
                 new JsonSerializerOptions
                 {
@@ -70,38 +68,38 @@ namespace WebApp.Models
                 });
         }
 
-        public async Task<List<Department>> GetDepartmentsAsync(string? filter = null)
+        public async Task<List<Employee>> GetEmployeesAsync(string? filter = null, int? departmentId = null)
         {
             var client = httpClientFactory.CreateClient("ApiEndpoints");
 
-            var response = await client.GetAsync($"departments/search/{filter}");
+            var response = await client.GetAsync($"employees/search?filter={filter ?? string.Empty}&departmentId={departmentId ?? 0}");
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
-            var departments = JsonSerializer.Deserialize<List<Department>>(
+            var employees = JsonSerializer.Deserialize<List<Employee>>(
                 responseString,
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-            if (departments is null) departments = new List<Department>();
+            if (employees is null) employees = new List<Employee>();
 
-            return departments;
+            return employees;
         }
 
-        public async Task<bool> UpdateDepartmentAsync(Department? department)
+        public async Task<bool> UpdateEmployeeAsync(Employee? employee)
         {
-            if (department is null) return false;
+            if (employee is null) return false;
 
             var client = httpClientFactory.CreateClient("ApiEndpoints");
 
-            var departmentJson = new StringContent(
-                JsonSerializer.Serialize(department),
+            var employeeJson = new StringContent(
+                JsonSerializer.Serialize(employee),
                 Encoding.UTF8,
                 Application.Json);
 
-            var response = await client.PutAsync($"/departments/{department.Id}", departmentJson);
+            var response = await client.PutAsync($"/employees/{employee.Id}", employeeJson);
             response.EnsureSuccessStatusCode();
 
             return true;

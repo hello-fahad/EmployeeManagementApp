@@ -6,16 +6,23 @@ using WebApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//builder.Logging.ClearProviders();
+//builder.Logging.AddJsonConsole(options =>
+//{
+//    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss";
+//});
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages().AddMvcOptions(options =>
 {
     options.Filters.Add<WriteToConsoleResourceFilter>();
 });
 
-builder.Services.AddSingleton<IDepartmentsRepository, DepartmentsRepository>();
-builder.Services.AddSingleton<IEmployeesRepository, EmployeesRepository>();
+//builder.Services.AddSingleton<IDepartmentsRepository, DepartmentsRepository>();
+//builder.Services.AddSingleton<IEmployeesRepository, EmployeesRepository>();
 
 builder.Services.AddTransient<IDepartmentsApiRepository, DepartmentsApiRepository>();
+builder.Services.AddTransient<IEmployeesApiRepository, EmployeesApiRepository>();
 builder.Services.AddTransient<ValidateApiHeaderHandler>();
 
 builder.Services.AddHttpClient("ApiEndpoints", (HttpClient client) =>
@@ -27,14 +34,35 @@ builder.Services.AddHttpClient("ApiEndpoints", (HttpClient client) =>
 {
     return policy.WaitAndRetryAsync(new[]
     {
-        TimeSpan.FromMicroseconds(100),
+        TimeSpan.FromMilliseconds(100),
         TimeSpan.FromMilliseconds(200),
         TimeSpan.FromMilliseconds(300),
     });
 });
 
+builder.Services.AddAuthentication("CookieScheme").AddCookie("CookieScheme", options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.Cookie.Name = "CookieScheme";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+});
+
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+    {
+        policy.RequireClaim("Role", "Admin");
+    });
+});
+
+
 
 var app = builder.Build();
+
+app.UseHsts();
+app.UseHttpsRedirection();
+
 
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -46,6 +74,9 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {

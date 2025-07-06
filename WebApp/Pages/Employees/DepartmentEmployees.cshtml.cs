@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApp.Model;
 using WebApp.Models;
 
 namespace WebApp.Pages.Employees
 {
     public class DepartmentEmployeesModel : PageModel
     {
-        private readonly IDepartmentsRepository departmentsRepository;
+        private readonly IDepartmentsApiRepository departmentsRepository;
 
-        public DepartmentEmployeesModel(IDepartmentsRepository departmentsRepository)
+        public DepartmentEmployeesModel(IDepartmentsApiRepository departmentsRepository)
         {
             this.departmentsRepository = departmentsRepository;
         }
@@ -18,11 +19,11 @@ namespace WebApp.Pages.Employees
         [BindProperty(SupportsGet = true)]
         public int? DepartmentId { get; set; }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
             if (DepartmentId.HasValue)
             {
-                var department = departmentsRepository.GetDepartmentById(DepartmentId.Value);
+                var department = await departmentsRepository.GetDepartmentByIdAsync(DepartmentId.Value);
                 DepartmentName = department?.Name;
             }
         }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApp.Filters;
 using WebApp.Helpers;
+using WebApp.Model;
 using WebApp.Models;
 using WebApp.ViewModels;
 
@@ -11,10 +12,10 @@ namespace WebApp.Pages.Employees
     [EnsureEmployeeExistsPageFilter]
     public class EditModel : PageModel
     {
-        private readonly IEmployeesRepository employeesRepository;
-        private readonly IDepartmentsRepository departmentsRepository;
+        private readonly IEmployeesApiRepository employeesRepository;
+        private readonly IDepartmentsApiRepository departmentsRepository;
 
-        public EditModel(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository)
+        public EditModel(IEmployeesApiRepository employeesRepository, IDepartmentsApiRepository departmentsRepository)
         {
             this.employeesRepository = employeesRepository;
             this.departmentsRepository = departmentsRepository;
@@ -23,28 +24,28 @@ namespace WebApp.Pages.Employees
         [BindProperty]
         public EmployeeViewModel? EmployeeViewModel { get; set; }
 
-        public void OnGet(int id)
+        public async Task OnGetAsync(int id)
         {
             this.EmployeeViewModel = new EmployeeViewModel();
-            this.EmployeeViewModel.Employee = employeesRepository.GetEmployeeById(id);
-            this.EmployeeViewModel.Departments = departmentsRepository.GetDepartments();
+            this.EmployeeViewModel.Employee = await employeesRepository.GetEmployeeByIdAsync(id);
+            this.EmployeeViewModel.Departments = await departmentsRepository.GetDepartmentsAsync();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (EmployeeViewModel is not null && EmployeeViewModel.Employee != null)
             {
-                employeesRepository.UpdateEmployee(EmployeeViewModel.Employee);
+                await employeesRepository.UpdateEmployeeAsync(EmployeeViewModel.Employee);
             }
 
             return RedirectToPage("Index");
         }
 
-        public IActionResult OnPostDeleteEmplopyee(int id)
+        public async Task<IActionResult> OnPostDeleteEmplopyeeAsync(int id)
         {
-            var employee = employeesRepository.GetEmployeeById(id);            
+            var employee = await employeesRepository.GetEmployeeByIdAsync(id);            
 
-            employeesRepository.DeleteEmployee(employee);
+            await employeesRepository.DeleteEmployeeAsync(employee);
 
             return RedirectToPage("Index");
         }

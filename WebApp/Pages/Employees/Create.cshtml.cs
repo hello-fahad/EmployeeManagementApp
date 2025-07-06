@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApp.Filters;
 using WebApp.Helpers;
+using WebApp.Model;
 using WebApp.Models;
 using WebApp.ViewModels;
 
@@ -10,12 +11,12 @@ namespace WebApp.Pages.Employees
     [EnsureValidModelStatePageFilter]
     public class CreateModel : PageModel
     {
-        private readonly IDepartmentsRepository departmentsRepository;
-        private readonly IEmployeesRepository employeesRepository;
+        private readonly IDepartmentsApiRepository departmentsRepository;
+        private readonly IEmployeesApiRepository employeesRepository;
 
         public CreateModel(
-            IDepartmentsRepository departmentsRepository, 
-            IEmployeesRepository employeesRepository)
+            IDepartmentsApiRepository departmentsRepository,
+            IEmployeesApiRepository employeesRepository)
         {
             this.departmentsRepository = departmentsRepository;
             this.employeesRepository = employeesRepository;
@@ -24,18 +25,18 @@ namespace WebApp.Pages.Employees
         [BindProperty]
         public EmployeeViewModel? EmployeeViewModel { get; set; }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
             this.EmployeeViewModel = new EmployeeViewModel();
             this.EmployeeViewModel.Employee = new Employee();
-            this.EmployeeViewModel.Departments = departmentsRepository.GetDepartments();
+            this.EmployeeViewModel.Departments = await departmentsRepository.GetDepartmentsAsync();
         }
 
-        public IActionResult OnPost() 
+        public async Task<IActionResult> OnPostAsync() 
         {   
             if (this.EmployeeViewModel is not null && this.EmployeeViewModel.Employee is not null)
             {
-                employeesRepository.AddEmployee(this.EmployeeViewModel.Employee);
+                await employeesRepository.AddEmployeeAsync(this.EmployeeViewModel.Employee);
             }
 
             return RedirectToPage("Index");
