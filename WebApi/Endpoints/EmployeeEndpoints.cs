@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using WebApi.Filters;
 using WebApi.Models;
 using WebApi.Results;
@@ -19,6 +20,7 @@ namespace WebApi.Endpoints
 
             app.MapGet("/employees/search",
                 [Tags("Web API - Employees")]
+                [Authorize]
             (string? filter, int? departmentId, IEmployeesRepository employeesRepository) =>
                 {
                     if (string.IsNullOrWhiteSpace(filter)) filter = null;

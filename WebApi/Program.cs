@@ -1,7 +1,10 @@
 using Asp.Versioning;
 using Asp.Versioning.Builder;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json;
 using WebApi.Data;
 using WebApi.Endpoints;
@@ -9,6 +12,29 @@ using WebApi.Models;
 using WebApi.Results;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ClientAuthentication:SecurityKey"] ?? string.Empty))
+    };
+});
+
+
+builder.Services.AddAuthorization();
+
+
 
 builder.Services.AddDbContext<CompanyDbContext>(options =>
 {
@@ -68,6 +94,10 @@ else
 }
 
 app.UseStatusCodePages();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapAccountEndpoints();
 
