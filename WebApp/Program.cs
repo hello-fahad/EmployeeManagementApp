@@ -12,6 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 //    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss";
 //});
 
+builder.Services.AddHttpContextAccessor();
+
+
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages().AddMvcOptions(options =>
 {
@@ -23,13 +27,16 @@ builder.Services.AddRazorPages().AddMvcOptions(options =>
 
 builder.Services.AddTransient<IDepartmentsApiRepository, DepartmentsApiRepository>();
 builder.Services.AddTransient<IEmployeesApiRepository, EmployeesApiRepository>();
-builder.Services.AddTransient<ValidateApiHeaderHandler>();
+//builder.Services.AddTransient<ValidateApiHeaderHandler>();
+builder.Services.AddTransient<JWTAuthenticationHandler>();
+
 
 builder.Services.AddHttpClient("ApiEndpoints", (HttpClient client) =>
 {
     client.BaseAddress = new Uri("http://localhost:5065/");
 })
 //.AddHttpMessageHandler<ValidateApiHeaderHandler>()
+.AddHttpMessageHandler<JWTAuthenticationHandler>()
 .AddTransientHttpErrorPolicy(policy =>
 {
     return policy.WaitAndRetryAsync(new[]
@@ -42,6 +49,8 @@ builder.Services.AddHttpClient("ApiEndpoints", (HttpClient client) =>
 
 builder.Services.AddAuthentication("CookieScheme").AddCookie("CookieScheme", options =>
 {
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
     options.LoginPath = "/Account/Login";
     options.Cookie.Name = "CookieScheme";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
@@ -56,6 +65,12 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+    options.Cookie.IsEssential = true;
+});
 
 
 var app = builder.Build();
@@ -77,6 +92,9 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
+
 
 app.UseEndpoints(endpoints =>
 {
