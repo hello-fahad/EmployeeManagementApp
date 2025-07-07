@@ -20,7 +20,7 @@ namespace WebApi.Endpoints
 
             app.MapGet("/employees/search",
                 [Tags("Web API - Employees")]
-                [Authorize]
+                [Authorize(Policy = "AdminOnly")]
             (string? filter, int? departmentId, IEmployeesRepository employeesRepository) =>
                 {
                     if (string.IsNullOrWhiteSpace(filter)) filter = null;
